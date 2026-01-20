@@ -106,7 +106,20 @@ class MemoryManager:
             )
 
     def _get_claude_md_template(self, scope: MemoryScope) -> str:
-        """Get template for CLAUDE.md."""
+        """Get template for CLAUDE.md from template files."""
+        # Get path to templates directory
+        templates_dir = Path(__file__).parent / "templates"
+
+        if scope == MemoryScope.GLOBAL:
+            template_file = templates_dir / "CLAUDE.md.global.template"
+        else:
+            template_file = templates_dir / "CLAUDE.md.project.template"
+
+        # Read template file if it exists, otherwise fall back to basic template
+        if template_file.exists():
+            return template_file.read_text()
+
+        # Fallback templates if files not found
         if scope == MemoryScope.GLOBAL:
             return """# Global User Preferences
 

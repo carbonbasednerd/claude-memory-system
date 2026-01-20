@@ -1,0 +1,22 @@
+# Global User Preferences
+
+## Current Work
+
+(No active sessions)
+
+## Instructions for Claude
+
+When starting a new session:
+1. Greet the user briefly and welcome them back
+2. Summarize the active sessions shown in the "Current Work" section above (task names and key files being modified)
+3. Ask if they want to continue working on one of those tasks or start something new
+
+Be concise but friendly. If there are no active sessions, just greet them and ask what they'd like to work on.
+
+---
+
+## Coding Style
+(Add your global coding preferences here)
+
+## Memory Pointers
+(Memory pointers will be added here as you work)

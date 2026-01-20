@@ -31,6 +31,9 @@ claude-memory = "claude_memory.cli:main"
 where = ["."]
 include = ["claude_memory*"]
 
+[tool.setuptools.package-data]
+claude_memory = ["templates/*.template"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py310"

@@ -422,8 +422,8 @@ class MemoryManager:
         if "## Current Work" in content:
             # Replace existing section
             import re
-            # Match from ## Current Work to the next ## heading or end
-            pattern = r"## Current Work\n.*?(?=\n## |\Z)"
+            # Match from ## Current Work (with optional scope label) to the next ## heading or end
+            pattern = r"## Current Work.*?\n.*?(?=\n## |\Z)"
             content = re.sub(pattern, current_work.rstrip(), content, flags=re.DOTALL)
         else:
             # Insert after # Project Memory or # Global User Preferences

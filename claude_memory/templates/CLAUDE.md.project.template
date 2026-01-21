@@ -6,6 +6,13 @@
 
 ---
 
+## Instructions for Claude
+
+Memory management instructions are in the global CLAUDE.md (~/.claude/CLAUDE.md).
+Remember to use `claude-memory` commands to track and save work in this project.
+
+---
+
 ## Project Context
 
 (Project-specific context will be added here)

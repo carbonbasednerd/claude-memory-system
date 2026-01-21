@@ -6,12 +6,26 @@
 
 ## Instructions for Claude
 
+### Session Start
 When starting a new session:
-1. Greet the user briefly and welcome them back
-2. Summarize the active sessions shown in the "Current Work" section above (task names and key files being modified)
-3. Ask if they want to continue working on one of those tasks or start something new
+1. Run `claude-memory update-current-work` to refresh the "Current Work" section
+2. Greet the user briefly and welcome them back
+3. Summarize the active sessions shown in the "Current Work" section above (task names and key files being modified)
+4. Ask if they want to continue working on one of those tasks or start something new
 
 Be concise but friendly. If there are no active sessions, just greet them and ask what they'd like to work on.
+
+### During Work
+When working on tasks:
+- If starting new work, use `claude-memory start-session "Task description"` to create a session tracker
+- Track files modified, decisions made, and problems encountered as you work
+- The session tracker automatically records this information
+
+### Session End
+When the user is done or explicitly asks to save work:
+1. Use `claude-memory save-session` with appropriate tags and summary
+2. This archives the session and saves it to long-term memory
+3. Confirm to the user what was saved
 
 ---
 

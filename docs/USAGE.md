@@ -5,7 +5,14 @@
 ### 1. Installation
 
 ```bash
-cd ~/git/jay-i
+# Clone the repository
+git clone https://github.com/carbonbasednerd/claude-memory-system.git
+cd claude-memory-system
+
+# Install with pip
+pip install .
+
+# Or install in editable mode for development
 pip install -e .
 ```
 
@@ -18,39 +25,55 @@ claude-memory init
 # Initialize only global
 claude-memory init --scope global
 
-# Initialize only project (must be in a project directory)
+# Initialize only project (must be in a git repository)
 claude-memory init --scope project
 ```
 
-### 3. Start Working
+This creates:
+- `~/.claude/CLAUDE.md` - Global memory with instructions for Claude
+- `.claude/CLAUDE.md` - Project-specific memory (if in a project)
 
-The memory system tracks your work automatically when you make changes. To explicitly start a session:
+The CLAUDE.md files contain instructions that tell Claude to automatically manage the memory system.
+
+### 3. Working with Claude Code (Automatic Mode)
+
+**This is the recommended workflow** - Claude manages everything for you!
+
+**When you start a new Claude Code session:**
+1. Claude runs `claude-memory update-current-work` automatically
+2. Claude greets you and summarizes any active sessions
+3. Claude asks if you want to continue existing work or start something new
+
+**While working:**
+- Claude creates session trackers for new tasks
+- Claude tracks files modified, decisions made, and problems encountered
+- All tracking happens automatically in the background
+
+**When you're done:**
+- Tell Claude you're finished or ask to save work
+- Claude runs `claude-memory save-session` automatically
+- Claude confirms what was saved to long-term memory
+
+**You just work with Claude normally** - the memory system is hands-off!
+
+### 4. Manual Commands (For Advanced Users)
+
+You can also use these commands directly if you prefer manual control:
 
 ```bash
-# Start a new session
+# Start a new session manually
 claude-memory start-session "Implementing user authentication"
-```
 
-### 4. Working with Sessions
+# List active sessions
+claude-memory list-sessions
 
-During your work, Claude Code will automatically track:
-- Files you modify
-- Decisions you make
-- Problems you encounter
-- Notes and TODOs
+# Update the "Current Work" section in CLAUDE.md
+claude-memory update-current-work
 
-### 5. Save Session to Long-Term Memory
-
-When you're done with a task:
-
-```bash
 # Save the current session
 claude-memory save-session
 
-# Save with specific scope
-claude-memory save-session --scope global
-
-# Save with tags and summary
+# Save with specific scope, tags, and summary
 claude-memory save-session \
   --scope project \
   --tags "authentication,security,OAuth" \

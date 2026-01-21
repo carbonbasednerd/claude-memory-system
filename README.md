@@ -44,7 +44,14 @@ Project Memory (/project/.claude/)
 ## Installation
 
 ```bash
-cd ~/git/jay-i
+# Clone the repository
+git clone https://github.com/carbonbasednerd/claude-memory-system.git
+cd claude-memory-system
+
+# Install with pip
+pip install .
+
+# Or install in editable mode for development
 pip install -e .
 ```
 
@@ -52,21 +59,44 @@ pip install -e .
 
 ### Initialize Memory System
 ```bash
-# Creates ~/.claude/ on first use (automatic)
-# Creates project .claude/ when prompted
+# Initialize both global (~/.claude/) and project (.claude/) memory
 claude-memory init
+
+# Or initialize only global
+claude-memory init --scope global
+
+# Or initialize only project (must be in a git repository)
+claude-memory init --scope project
 ```
 
-### Session Workflow
-```bash
-# Start working (automatic tracking)
-# ... make changes, decisions, etc ...
+This creates CLAUDE.md files with instructions that tell Claude to automatically manage your memory system.
 
-# When done
-claude-memory save-session
-# - Evaluates session for long-term storage
-# - Suggests scope (global vs project)
-# - Detects skill candidates
+### Automatic Workflow
+
+**Claude manages the memory system for you!** When you start a new Claude Code session:
+
+1. **Claude greets you** and summarizes any ongoing work
+2. **Claude automatically tracks** your work (files, decisions, problems)
+3. **When you're done**, Claude saves the session to long-term memory
+
+You just work normally with Claude - the memory system runs automatically in the background.
+
+### Manual Commands (Optional)
+
+You can also use these commands directly if needed:
+
+```bash
+# Refresh the "Current Work" section in CLAUDE.md
+claude-memory update-current-work
+
+# Start a new session manually
+claude-memory start-session "Task description"
+
+# List active sessions
+claude-memory list-sessions
+
+# Save session with tags and summary
+claude-memory save-session --tags "feature,auth" --summary "Added OAuth support"
 ```
 
 ### Search Memory

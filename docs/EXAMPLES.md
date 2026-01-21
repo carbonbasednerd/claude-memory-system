@@ -2,7 +2,50 @@
 
 ## Complete Workflow Examples
 
-### Example 1: Feature Development with Memory
+### Example 1: Automatic Workflow with Claude Code (Recommended)
+
+**Scenario**: You're working with Claude Code and the memory system manages everything automatically.
+
+**Starting a new session:**
+```
+You: Hi Claude!
+
+Claude: Welcome back! I see you have one active session:
+- "Implement OAuth2 authentication" - Working on src/auth/oauth.py
+
+Would you like to continue with that, or start something new?
+
+You: Let's continue the OAuth work.
+
+Claude: Great! I'll help you continue the OAuth2 authentication work...
+```
+
+**Claude automatically:**
+- Ran `claude-memory update-current-work` at session start
+- Greeted you and summarized active work
+- Created session tracker (if starting new work)
+- Tracks all files, decisions, and problems as you work
+
+**When you're done:**
+```
+You: I think we're done with the OAuth implementation. Let's save this.
+
+Claude: I'll save this session to long-term memory.
+
+[Claude runs: claude-memory save-session --scope project --tags "authentication,OAuth2,security" --summary "Implemented OAuth2 flow with JWT tokens"]
+
+✓ Saved session to project memory
+  Memory ID: session-20260120-oauth-impl
+  Title: Implement OAuth2 authentication
+
+Your work has been saved! You can find it later by searching for "OAuth" or "authentication".
+```
+
+**No manual commands needed** - just work naturally with Claude!
+
+---
+
+### Example 2: Feature Development with Manual Commands
 
 **Scenario**: You're building an authentication system and want to track the work.
 
@@ -26,7 +69,7 @@ claude-memory save-session \
 claude-memory search "authentication" --scope project
 ```
 
-### Example 2: Finding Past Solutions
+### Example 3: Finding Past Solutions
 
 **Scenario**: You encounter a CORS issue and remember solving it before.
 
@@ -43,7 +86,7 @@ claude-memory show memory-20260119-oauth-impl
 # - Code location: src/middleware/cors.py:45
 ```
 
-### Example 3: Building a Skill from Patterns
+### Example 4: Building a Skill from Patterns
 
 **Scenario**: You've implemented 5 similar API endpoints and want to create a reusable skill.
 
@@ -69,7 +112,7 @@ claude-memory analyze-skills --scope project --min-occurrences 3
 # Create a skill based on the pattern
 ```
 
-### Example 4: Cross-Project Learning
+### Example 5: Cross-Project Learning
 
 **Scenario**: You solved a complex problem in Project A and want to use it in Project B.
 
@@ -97,7 +140,7 @@ claude-memory show memory-20260119-db-optimization
 # Apply the same pattern to Project B
 ```
 
-### Example 5: Concurrent Sessions
+### Example 6: Concurrent Sessions
 
 **Scenario**: You're working on two features simultaneously in different terminals.
 

@@ -11,15 +11,34 @@ When starting a new session:
 1. Run `claude-memory update-current-work` to refresh the "Current Work" section
 2. Greet the user briefly and welcome them back
 3. Summarize the active sessions shown in the "Current Work" section above (task names and key files being modified)
-4. Ask if they want to continue working on one of those tasks or start something new
+4. **If there ARE active sessions**: Ask if they want to continue working on one of those tasks or start something new
+5. **If there are NO active sessions**:
+   - Check for FUTURE_WORK.md in the current directory
+   - If FUTURE_WORK.md exists, read it and identify uncompleted items (lines with `- [ ]` checkboxes)
+   - Present 2-3 high-priority items: "You have pending future work: [brief list]. Would you like to start one of these, or work on something new?"
+   - If they choose a future work item, create a session for it using `claude-memory start-session`
+   - If no FUTURE_WORK.md, just greet them and ask what they'd like to work on
 
-Be concise but friendly. If there are no active sessions, just greet them and ask what they'd like to work on.
+Be concise but friendly.
 
 ### During Work
 When working on tasks:
 - If starting new work, use `claude-memory start-session "Task description"` to create a session tracker
 - Track files modified, decisions made, and problems encountered as you work
 - The session tracker automatically records this information
+
+**Capturing Future Ideas:**
+When the user mentions "future idea", "add to future work", or similar:
+1. Confirm the idea with the user
+2. Ask for priority level if unclear (High/Medium/Low)
+3. Check if FUTURE_WORK.md exists in current directory
+4. If not, ask if they want to create it
+5. Append the idea in this format:
+   ```
+   - [ ] Description (added YYYY-MM-DD)
+   ```
+   Under the appropriate priority section (## High Priority, ## Medium Priority, ## Low Priority / Ideas)
+6. Confirm: "Added to future work: [item]"
 
 ### Session End
 When the user is done or explicitly asks to save work:

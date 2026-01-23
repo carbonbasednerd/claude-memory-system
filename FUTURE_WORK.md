@@ -467,6 +467,49 @@ claude-memory-viz --health-check
 
 ---
 
+## 4. Future Work Management Enhancements
+
+### Phase 1: Template Integration (IMPLEMENTED - 2026-01-23)
+- ✅ Updated CLAUDE.md templates to check FUTURE_WORK.md at session start
+- ✅ Added instructions for capturing future ideas during sessions
+- ✅ Simple checkbox format for easy parsing
+
+### Phase 2: CLI Integration (Future)
+**Estimated time:** 1-2 weeks
+
+Add commands to claude-memory CLI:
+```bash
+claude-memory future add "Idea description" --priority high
+claude-memory future list
+claude-memory future start 1  # Creates session for item #1
+claude-memory future complete 1
+claude-memory future edit
+```
+
+**Benefits:**
+- Faster idea capture (no need to edit markdown)
+- Structured data (can generate reports)
+- Integration with session creation
+
+### Phase 3: Skill Integration (Future - Polish)
+**Estimated time:** 1-2 weeks
+
+Create `/future-work` skill:
+```bash
+/future-work add "Build export tool"
+/future-work browse  # Interactive list picker
+/future-work defer "Current task for later"
+```
+
+**Benefits:**
+- Natural language interaction
+- Seamless workflow (no context switching)
+- Can intelligently suggest priorities
+
+**Implementation notes saved in:** Long-term memory from session 2026-01-23
+
+---
+
 ## Priority & Roadmap
 
 ### High Priority
@@ -474,20 +517,33 @@ claude-memory-viz --health-check
    - Understand current state before optimizing
    - Can improve existing system without major changes
 
+2. **Future Work Management - Phase 1** - ✅ COMPLETED (2026-01-23)
+   - Template integration for session-start prompting
+   - Basic idea capture workflow
+
 ### Medium Priority
 2. **Memory Visualization (#3)** - Enhances usability
    - Makes memory system more accessible
    - Helps identify patterns and gaps
+
+3. **Future Work Management - Phase 2** - CLI commands
+   - If Phase 1 proves useful in practice
+   - Adds convenience but not essential
 
 ### Long-term
 3. **Database Backend (#1)** - Major architectural change
    - Only needed if scaling issues occur
    - Requires significant development time
 
+4. **Future Work Management - Phase 3** - Skill integration
+   - Polish layer on top of Phase 2
+   - Nice-to-have for power users
+
 ### Notes
 - These can be tackled independently
 - Feature 2 informs Feature 1 (usage patterns → database schema design)
 - Feature 3 works with or without Feature 1 (can visualize files or DB)
+- Future work management phases are incremental (can stop after Phase 1 if sufficient)
 
 ---
 

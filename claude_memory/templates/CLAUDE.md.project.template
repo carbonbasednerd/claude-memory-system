@@ -11,6 +11,9 @@
 Memory management instructions are in the global CLAUDE.md (~/.claude/CLAUDE.md).
 Remember to use `claude-memory` commands to track and save work in this project.
 
+**Future Work:**
+This project may have a FUTURE_WORK.md file in the root directory. If present, check it at session start (when no active sessions) and suggest items the user could work on.
+
 ---
 
 ## Project Context

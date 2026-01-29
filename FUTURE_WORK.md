@@ -90,18 +90,41 @@ Build a web-based graphical dashboard that complements the terminal `viz` comman
 - ✅ Installation instructions
 - ✅ Usage tips and interaction guide
 
-### Phase 2 & 3 (Future Enhancements - Optional)
+### ✅ Phase 2: Enhanced Features (COMPLETED - 2026-01-29)
 
-**Phase 2 Features (Not Yet Implemented):**
+**All Phase 2 Features Implemented:**
+- ✅ Tag network force-directed graph (NetworkX + Plotly)
+- ✅ Access heatmap (days × memories, color = access count)
+- ✅ Activity trends line charts with moving averages
+- ✅ Cumulative growth chart
+- ✅ Type trends stacked area chart
+- ✅ Activity calendar visualization
+- ✅ Enhanced export: JSON, Markdown, CSV downloads
 
-**Phase 2 Features (Not Yet Implemented):**
-- 🔲 Tag network force-directed graph (NetworkX + Plotly)
-- 🔲 Access heatmap (days × memories, color = access count)
-- 🔲 Activity trends line charts with moving averages
-- 🔲 Project tree map visualization
-- 🔲 Enhanced export: JSON, Markdown, CSV downloads
+**New "Analytics" Tab Added:**
+- Interactive tag network with adjustable co-occurrence threshold
+- Activity trends with 7-day moving averages
+- Cumulative memory growth by scope
+- Memory type trends over time
+- Activity calendar heatmap
+- Export buttons for JSON, Markdown, and CSV formats
 
-**Phase 3 Features (Future - Optional):**
+**New Modules Created:**
+- `charts/plotly_network.py` - Tag relationship graphs (169 traces for 54 tags)
+- `charts/plotly_heatmap.py` - Access patterns and calendar views
+- `charts/plotly_trends.py` - Time series analysis (4 chart types)
+- `export/exporters.py` - Multi-format export (JSON, Markdown, CSV)
+
+**Tested with Real Data:**
+- 20 memories, 54 unique tags
+- Tag network generates 169 network traces
+- JSON export: ~27KB
+- CSV export: 21 rows
+- All visualizations render correctly
+
+### Phase 3: Static Export & Deployment (Future - Optional)
+
+**Phase 3 Features (Not Yet Implemented):**
 - 🔲 Static HTML export (`--export dashboard.html`)
 - 🔲 Kaleido-based static PNG chart generation
 - 🔲 PDF report generation

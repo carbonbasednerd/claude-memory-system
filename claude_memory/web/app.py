@@ -50,7 +50,7 @@ def main():
         st.info(f"Showing {len(filtered_memories)} of {len(all_memories)} total memories")
 
     # Create tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["📊 Overview", "📅 Timeline", "🏷️ Tags", "🔍 Search"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Overview", "📅 Timeline", "🏷️ Tags", "🔍 Search", "📈 Analytics"])
 
     # Tab 1: Overview
     with tab1:
@@ -194,6 +194,117 @@ def main():
                             session_detail.render(mem)
             else:
                 st.info("No memories match your search query")
+
+    # Tab 5: Analytics
+    with tab5:
+        st.header("Advanced Analytics")
+
+        if filtered_memories:
+            # Tag Network
+            st.subheader("Tag Network Graph")
+            st.markdown("Visualizes relationships between tags based on co-occurrence in memories.")
+
+            col1, col2 = st.columns([3, 1])
+            with col2:
+                min_cooccur = st.slider(
+                    "Min Co-occurrence",
+                    min_value=1,
+                    max_value=10,
+                    value=2,
+                    help="Minimum number of times tags must appear together"
+                )
+
+            from claude_memory.web.charts.plotly_network import create_tag_network
+            network_fig = create_tag_network(filtered_memories, min_cooccurrence=min_cooccur)
+            st.plotly_chart(network_fig, use_container_width=True)
+
+            st.divider()
+
+            # Activity Trends
+            st.subheader("Activity Trends")
+
+            col1, col2 = st.columns([3, 1])
+            with col2:
+                trend_days = st.selectbox(
+                    "Time Period",
+                    options=[30, 60, 90, 180, 365],
+                    index=2,
+                    format_func=lambda x: f"Last {x} days"
+                )
+
+            from claude_memory.web.charts.plotly_trends import (
+                create_activity_trends,
+                create_cumulative_growth,
+                create_type_trends
+            )
+
+            trends_fig = create_activity_trends(filtered_memories, days=trend_days)
+            st.plotly_chart(trends_fig, use_container_width=True)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                cumulative_fig = create_cumulative_growth(filtered_memories)
+                st.plotly_chart(cumulative_fig, use_container_width=True)
+
+            with col2:
+                type_trends_fig = create_type_trends(filtered_memories, days=trend_days)
+                st.plotly_chart(type_trends_fig, use_container_width=True)
+
+            st.divider()
+
+            # Access Heatmap
+            st.subheader("Access Heatmap")
+            st.markdown("Shows memory access patterns over time.")
+
+            from claude_memory.web.charts.plotly_heatmap import create_activity_calendar
+            calendar_fig = create_activity_calendar(filtered_memories, days=90)
+            st.plotly_chart(calendar_fig, use_container_width=True)
+
+            st.divider()
+
+            # Export Section
+            st.subheader("📥 Export Data")
+
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                from claude_memory.web.export.exporters import export_to_json
+                if st.button("📄 Export as JSON", use_container_width=True):
+                    json_data = export_to_json(filtered_memories)
+                    st.download_button(
+                        label="⬇️ Download JSON",
+                        data=json_data,
+                        file_name=f"memories_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                        mime="application/json",
+                        use_container_width=True,
+                    )
+
+            with col2:
+                from claude_memory.web.export.exporters import export_to_markdown
+                if st.button("📝 Export as Markdown", use_container_width=True):
+                    md_data = export_to_markdown(filtered_memories)
+                    st.download_button(
+                        label="⬇️ Download Markdown",
+                        data=md_data,
+                        file_name=f"memories_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md",
+                        mime="text/markdown",
+                        use_container_width=True,
+                    )
+
+            with col3:
+                from claude_memory.web.export.exporters import export_to_csv
+                if st.button("📊 Export as CSV", use_container_width=True):
+                    csv_data = export_to_csv(filtered_memories)
+                    st.download_button(
+                        label="⬇️ Download CSV",
+                        data=csv_data,
+                        file_name=f"memories_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                        mime="text/csv",
+                        use_container_width=True,
+                    )
+
+        else:
+            st.info("No memories match the current filters")
 
     # Footer
     st.divider()

@@ -9,6 +9,13 @@ from claude_memory.session import SessionTracker
 from claude_memory.skills import SkillDetector, flag_skill_candidates
 from claude_memory.models import MemoryScope, MemoryType
 from claude_memory.utils import get_global_claude_dir, get_project_claude_dir
+from claude_memory.viz.timeline import timeline_cmd
+from claude_memory.viz.session import session_cmd
+from claude_memory.viz.search import search_cmd
+from claude_memory.viz.stats import stats_cmd
+from claude_memory.viz.tags import tags_cmd
+from claude_memory.viz.projects import projects_cmd
+from claude_memory.viz.health import health_cmd
 
 
 @click.group()
@@ -373,6 +380,24 @@ def update_current_work():
     manager = MemoryManager()
     manager.update_current_work()
     click.echo("✓ Updated CLAUDE.md with current work")
+
+
+@main.group()
+@click.pass_context
+def viz(ctx):
+    """Memory visualization commands."""
+    # Create and pass MemoryManager to all subcommands
+    ctx.obj = MemoryManager()
+
+
+# Register viz subcommands
+viz.add_command(timeline_cmd)
+viz.add_command(session_cmd)
+viz.add_command(search_cmd)
+viz.add_command(stats_cmd)
+viz.add_command(tags_cmd)
+viz.add_command(projects_cmd)
+viz.add_command(health_cmd)
 
 
 if __name__ == "__main__":

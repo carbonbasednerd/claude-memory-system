@@ -80,6 +80,182 @@ claude-memory save-session \
   --summary "Implemented OAuth2 authentication with JWT tokens"
 ```
 
+## Memory Visualization (`viz` commands)
+
+The `claude-memory viz` command group provides rich, interactive visualization of your memory system with beautiful terminal output powered by the Rich library.
+
+### Timeline View
+
+View memories chronologically with visual progress bars and access tracking:
+
+```bash
+# View all memories in timeline
+claude-memory viz timeline
+
+# Last 30 days only
+claude-memory viz timeline --days 30
+
+# Filter by scope
+claude-memory viz timeline --scope project
+
+# Filter by type
+claude-memory viz timeline --type session
+
+# Show only frequently accessed memories
+claude-memory viz timeline --min-accesses 5
+
+# Show only never-accessed memories
+claude-memory viz timeline --never-accessed
+```
+
+**Output**: Memories grouped by month with visual bars, showing access counts, tags, file counts, and decisions.
+
+### Session Detail View
+
+View comprehensive information about a specific session:
+
+```bash
+# View session details (automatically records access)
+claude-memory viz session session-20260119-213545-e98c
+```
+
+**Features**:
+- Prominent access tracking section (count, first/last accessed, recent queries)
+- Complete metadata (scope, type, created/updated dates)
+- Tags with color coding
+- Summary and decisions
+- Files modified (up to 15 shown)
+- Related sessions based on tag overlap
+
+**Note**: Viewing a session automatically records the access, incrementing the access count and updating timestamps.
+
+### Search Interface
+
+Full-text search with advanced filtering and export capabilities:
+
+```bash
+# Basic search
+claude-memory viz search "authentication"
+
+# Search with filters
+claude-memory viz search "security" \
+  --scope project \
+  --tags "vlan,firewall" \
+  --days 30
+
+# Advanced access-based filters
+claude-memory viz search "documentation" --min-accesses 5
+claude-memory viz search "old-project" --never-accessed
+claude-memory viz search "recent" --accessed-after 2026-01-01
+claude-memory viz search "stale" --accessed-before 2025-12-31
+claude-memory viz search "rarely-used" --max-accesses 2
+
+# Export results
+claude-memory viz search "api" --export json > results.json
+claude-memory viz search "security" --export markdown > report.md
+```
+
+**Features**:
+- Results sorted by relevance (access count + recency)
+- Visual indicators for highly accessed memories (⭐)
+- Rich panel-based display
+- JSON/Markdown export for reporting
+
+### Statistics Dashboard
+
+View comprehensive statistics about your memory system:
+
+```bash
+# Full dashboard
+claude-memory viz stats
+
+# Project stats only
+claude-memory viz stats --scope project
+
+# Export as JSON
+claude-memory viz stats --export json > stats.json
+```
+
+**Displays**:
+- Overview (total memories, accesses, average)
+- Breakdown by type with access counts
+- **Most Accessed (Top 10)** - frequently referenced memories
+- **Never Accessed** - unused memories
+- Activity timeline (last 90 days by week)
+- Top tags with frequency bars
+
+### Tag Analysis
+
+Visualize tag relationships and frequency:
+
+```bash
+# View all tags
+claude-memory viz tags
+
+# Filter by minimum occurrence
+claude-memory viz tags --min-count 3
+
+# Project tags only
+claude-memory viz tags --scope project
+```
+
+**Features**:
+- Tag cloud with frequency visualization
+- Access statistics per tag (avg accesses per memory)
+- Co-occurrence network showing tag relationships
+- Orphaned tags identification (never paired with other tags)
+
+### Project Map
+
+Scan and visualize all projects with memory:
+
+```bash
+# View all projects
+claude-memory viz projects
+```
+
+**Displays**:
+- All discovered `.claude` directories
+- Session/decision/access counts per project
+- Most recent and most accessed memories
+- Top tags per project
+- Beautiful tree visualization
+
+### Health Check
+
+Check memory system integrity and identify issues:
+
+```bash
+# Full health check
+claude-memory viz health
+
+# Project only
+claude-memory viz health --scope project
+```
+
+**Checks**:
+- **System Integrity**: Index files, session files, markdown archives
+- **Quality Warnings**:
+  - Untagged sessions (add tags for searchability)
+  - Never-accessed memories (may be outdated)
+  - Potential duplicates (similarity detection)
+  - Stale sessions (>6 months old, unused)
+- **Actionable Recommendations**: Specific steps to improve memory health
+
+### Export Capabilities
+
+Most viz commands support exporting data:
+
+```bash
+# Export formats
+--export json       # JSON format for programmatic access
+--export markdown   # Markdown format for documentation
+```
+
+**Available on**:
+- `viz search` - Export search results
+- `viz stats` - Export statistics data
+
 ## Searching Memory
 
 ### Basic Search

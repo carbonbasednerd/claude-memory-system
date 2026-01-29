@@ -3,7 +3,181 @@
 This document tracks future improvements and explorations for the Claude Memory System.
 
 **Status:** Ideas for future development
-**Last Updated:** 2026-01-23
+**Last Updated:** 2026-01-28
+
+---
+
+## ✅ COMPLETED: Memory Visualization Tool (Phases 1 & 2)
+
+**Status:** ✅ Implemented (2026-01-28)
+
+### Completed Features
+
+**Phase 1 - MVP Core Views:**
+- ✅ Timeline view (`claude-memory viz timeline`) - chronological view with access tracking
+- ✅ Session detail view (`claude-memory viz session <id>`) - comprehensive session info
+- ✅ Search interface (`claude-memory viz search <query>`) - full-text search with filters
+- ✅ Statistics dashboard (`claude-memory viz stats`) - overview, most/least accessed, activity
+
+**Phase 2 - Enhanced Features:**
+- ✅ Tag network/cloud (`claude-memory viz tags`) - frequency, co-occurrence, access stats
+- ✅ Project map (`claude-memory viz projects`) - scan all .claude dirs, aggregated stats
+- ✅ Health check (`claude-memory viz health`) - integrity checks, warnings, recommendations
+- ✅ Export capabilities - JSON and Markdown export for search results
+
+**Technical Stack:**
+- Rich library for beautiful terminal UI
+- Click command group integration
+- Access tracking prominently displayed throughout
+- Color-coded output with progress bars, tables, trees
+
+### ✅ Phase 3 Complete
+
+All features implemented:
+- ✅ Access recording (auto-record when viewing sessions)
+- ✅ Advanced filters (--accessed-after, --min-accesses, --never-accessed, etc.)
+- ✅ Export support extended (stats command)
+- ✅ Documentation complete in USAGE.md
+- 🔲 Unit tests (optional, pending)
+
+---
+
+## High Priority
+
+### Web-Based Graphical Visualization Dashboard
+
+**Status:** 💡 Proposed (2026-01-28)
+**Priority:** High
+**Effort:** 1-2 weeks
+
+**Concept:**
+Build a web-based graphical dashboard that complements the terminal `viz` commands with interactive visualizations, charts, and browsing capabilities.
+
+**Technology Options:**
+
+1. **Streamlit** (Recommended for MVP)
+   - Pure Python, rapid development
+   - Built-in interactive widgets
+   - Auto-refresh capability
+   - Command: `claude-memory web`
+
+2. **Dash/Plotly** (For Production)
+   - More customization
+   - Professional dashboards
+   - Better for complex interactions
+
+3. **Static HTML Export**
+   - No server needed
+   - Generate and share reports
+   - Command: `claude-memory viz export-dashboard`
+
+**Features:**
+
+**Core Visualizations:**
+- 📊 Interactive timeline with zoom/pan (D3.js timeline)
+- 🌐 Force-directed tag network graph
+- 📈 Access heatmap (days × memories)
+- 🗺️ Project tree map (size = sessions)
+- 📉 Activity trends (line charts)
+- 🎯 Tag frequency word cloud
+
+**Interactive Browsing:**
+- Search with live filtering
+- Click to view session details
+- Hover for tooltips
+- Tag filtering (click tag to filter)
+- Date range picker
+
+**Analytics:**
+- Access patterns over time
+- Most/least active projects
+- Tag usage trends
+- Session duration estimates
+- Memory growth rate
+
+**Export & Sharing:**
+- Export dashboard as static HTML
+- PDF reports
+- Share via URL (if deployed)
+
+**Implementation Plan:**
+
+**Phase 1: Streamlit MVP (Week 1)**
+```python
+# claude_memory/web/dashboard.py
+import streamlit as st
+import plotly.express as px
+from claude_memory.memory import MemoryManager
+
+def main():
+    st.set_page_config(page_title="Claude Memory Dashboard", layout="wide")
+
+    # Sidebar
+    st.sidebar.title("Filters")
+    scope = st.sidebar.selectbox("Scope", ["both", "global", "project"])
+    days = st.sidebar.slider("Days", 7, 365, 90)
+
+    # Load data
+    manager = MemoryManager()
+    memories = manager.search_memory()
+
+    # Visualizations
+    col1, col2 = st.columns(2)
+    with col1:
+        st.plotly_chart(create_timeline_chart(memories))
+    with col2:
+        st.plotly_chart(create_tag_network(memories))
+
+    # Data table
+    st.dataframe(memories_to_df(memories))
+```
+
+**Phase 2: Enhanced Features (Week 2)**
+- Session detail modal/page
+- Advanced filtering UI
+- Tag network graph (NetworkX + Plotly)
+- Export to static HTML
+
+**Phase 3: Production Deploy (Optional)**
+- Docker containerization
+- Deploy to Railway/Render/Fly.io
+- Authentication (if sharing)
+
+**CLI Integration:**
+```bash
+# Start web dashboard
+claude-memory web
+
+# Start on specific port
+claude-memory web --port 8080
+
+# Export static dashboard
+claude-memory web --export dashboard.html
+
+# Open in browser automatically
+claude-memory web --open
+```
+
+**Benefits:**
+- ✅ Visual exploration of memory landscape
+- ✅ Easier pattern recognition
+- ✅ Shareable reports
+- ✅ Better for presentations
+- ✅ Complements terminal workflow
+
+**Challenges:**
+- 🔴 Additional dependency (streamlit/dash)
+- 🔴 Port conflicts if running multiple instances
+- 🔴 Browser requirement (not pure terminal)
+
+**Acceptance Criteria:**
+- [ ] Launch web server with `claude-memory web`
+- [ ] Interactive timeline visualization
+- [ ] Tag network graph
+- [ ] Session detail view
+- [ ] Search and filter UI
+- [ ] Export to static HTML
+- [ ] Documentation in USAGE.md
 
 ---
 

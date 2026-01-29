@@ -400,5 +400,65 @@ viz.add_command(projects_cmd)
 viz.add_command(health_cmd)
 
 
+@main.command()
+@click.option("--port", default=8501, help="Port to run web server")
+@click.option("--open/--no-open", default=True, help="Open browser automatically")
+@click.option("--export", type=click.Path(), help="Export to static HTML file")
+def web(port, open, export):
+    """Launch interactive web dashboard."""
+    if export:
+        click.echo("✗ HTML export not yet implemented")
+        click.echo("  Coming in Phase 3 - use the web UI for now")
+        return
+
+    # Check if streamlit is installed
+    try:
+        import streamlit
+    except ImportError:
+        click.echo("✗ Streamlit not installed")
+        click.echo("  Install with: pip install -e '.[web]'")
+        return
+
+    # Launch Streamlit app
+    import subprocess
+    import webbrowser
+    import time
+
+    app_path = Path(__file__).parent / "web" / "app.py"
+
+    click.echo(f"🚀 Launching Claude Memory Dashboard on port {port}...")
+    click.echo(f"   App path: {app_path}")
+
+    # Build streamlit command
+    cmd = [
+        "streamlit", "run",
+        str(app_path),
+        "--server.port", str(port),
+        "--server.headless", "true",
+        "--browser.gatherUsageStats", "false",
+    ]
+
+    # Open browser if requested
+    if open:
+        click.echo(f"   Opening browser at http://localhost:{port}")
+        # Delay browser open slightly to let server start
+        def open_browser():
+            time.sleep(2)
+            webbrowser.open(f"http://localhost:{port}")
+
+        import threading
+        threading.Thread(target=open_browser, daemon=True).start()
+
+    click.echo("\n   Press Ctrl+C to stop the server\n")
+
+    try:
+        subprocess.run(cmd)
+    except KeyboardInterrupt:
+        click.echo("\n✓ Dashboard stopped")
+    except FileNotFoundError:
+        click.echo("✗ Streamlit command not found")
+        click.echo("  Make sure streamlit is installed: pip install -e '.[web]'")
+
+
 if __name__ == "__main__":
     main()

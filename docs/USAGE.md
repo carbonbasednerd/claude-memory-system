@@ -80,6 +80,52 @@ claude-memory save-session \
   --summary "Implemented OAuth2 authentication with JWT tokens"
 ```
 
+## Web Dashboard
+
+Launch an interactive web-based dashboard for exploring your memory system:
+
+```bash
+# Launch web dashboard (opens browser automatically)
+claude-memory web
+
+# Launch on custom port
+claude-memory web --port 8080
+
+# Launch without opening browser
+claude-memory web --no-open
+```
+
+The web dashboard provides:
+- **Interactive Timeline**: Zoom, pan, and click through memories visually
+- **Statistics Overview**: Charts and metrics about your memory usage
+- **Tag Analysis**: Tag frequencies, co-occurrence, and network graphs
+- **Advanced Search**: Filter by scope, type, tags, date range, and access count
+- **Session Details**: Click any memory to view full content
+- **Real-time Filtering**: Sidebar filters update visualizations instantly
+
+### Installation
+
+The web dashboard requires additional dependencies:
+
+```bash
+pip install -e ".[web]"
+```
+
+This installs:
+- Streamlit (web framework)
+- Plotly (interactive charts)
+- Pandas (data manipulation)
+- NetworkX (tag networks)
+- Kaleido (chart export)
+
+### Usage Tips
+
+- Use the **sidebar filters** to narrow down memories by scope, type, tags, dates, or access count
+- Click **Refresh Data** to reload after creating new memories
+- The **Timeline tab** shows memories chronologically with interactive zoom
+- The **Tags tab** reveals tag patterns and co-occurrences
+- The **Search tab** lets you filter and explore specific memories
+
 ## Memory Visualization (`viz` commands)
 
 The `claude-memory viz` command group provides rich, interactive visualization of your memory system with beautiful terminal output powered by the Rich library.

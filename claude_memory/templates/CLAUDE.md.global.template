@@ -46,6 +46,15 @@ When the user is done or explicitly asks to save work:
 2. This archives the session and saves it to long-term memory
 3. Confirm to the user what was saved
 
+### Task Inquiries
+When the user asks about "tasks", "what to work on", or similar:
+1. Check current tasks with TaskList tool
+2. Check FUTURE_WORK.md for uncompleted items (lines with `- [ ]` checkboxes)
+3. Present both:
+   - Active tasks (from task list)
+   - Future work items (from FUTURE_WORK.md)
+4. Ask which they'd like to work on
+
 ---
 
 ## Coding Style

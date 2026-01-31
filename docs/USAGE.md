@@ -126,6 +126,77 @@ This installs:
 - The **Tags tab** reveals tag patterns and co-occurrences
 - The **Search tab** lets you filter and explore specific memories
 
+## Debug Mode & Context Tracking
+
+Debug mode helps you understand and optimize context usage by the memory system. When enabled, it tracks what's being loaded and provides detailed breakdowns.
+
+### Enabling Debug Mode
+
+```bash
+# Enable debug mode
+claude-memory debug on
+
+# Disable debug mode
+claude-memory debug off
+
+# Check debug status
+claude-memory debug status
+```
+
+### In-Conversation Usage
+
+When debug mode is enabled, you can ask Claude for context usage reports:
+
+```
+You: "turn on debug mode"
+Claude: ✅ Debug mode enabled. Tracking context usage...
+
+You: "show context usage"
+Claude: [Displays detailed breakdown of memory system context]
+```
+
+### What Debug Mode Shows
+
+**Context Budget Analysis:**
+- Total context limit (200k tokens)
+- Memory system budget allocation (target: 5k tokens, 2.5%)
+- Always-loaded content (CLAUDE.md files)
+- On-demand content (manifest, full memories)
+
+**Breakdown:**
+- Global vs project memory overhead
+- Manifest file sizes
+- Total memories and their full content size
+- Available budget remaining
+
+**Health Indicators:**
+- ✅ Well within budget
+- ⚠️ Using >50% of memory budget
+- 🔴 Exceeding memory budget
+
+### Use Cases
+
+**Optimize Context Usage:**
+```bash
+claude-memory debug on
+# ... work with Claude, ask "show context usage" ...
+# Identify if memory system is using too much context
+# Consider archiving old memories or optimizing templates
+```
+
+**Understand Memory Impact:**
+- See exact token counts for CLAUDE.md files
+- Understand manifest overhead
+- Track how much context memories would use if fully loaded
+- Verify the lightweight system is working as intended
+
+**Debug Performance Issues:**
+- If Claude seems slow, check context usage
+- Large CLAUDE.md files can be optimized
+- Manifest helps avoid loading all memories upfront
+
+Debug mode creates a persistent flag at `~/.claude/sessions/debug.flag` so it stays active across Claude Code sessions until explicitly disabled.
+
 ## Memory Visualization (`viz` commands)
 
 The `claude-memory viz` command group provides rich, interactive visualization of your memory system with beautiful terminal output powered by the Rich library.
@@ -373,6 +444,35 @@ claude-memory rebuild-index --scope global
 ./scripts/rebuild-index.sh project
 ```
 
+### Rebuild Manifest
+
+The manifest system provides a lightweight index of all memories without loading full content. This reduces context usage by 30% while maintaining awareness of available memories.
+
+```bash
+# Rebuild both global and project manifests
+claude-memory rebuild-manifest
+
+# Rebuild only global manifest
+claude-memory rebuild-manifest --scope global
+
+# Rebuild only project manifest
+claude-memory rebuild-manifest --scope project
+```
+
+**What the manifest includes:**
+- Memory metadata (title, tags, type, scope)
+- Token size estimates
+- Access tracking (count, last accessed)
+- Truncated summaries (first 200 chars)
+
+**When to rebuild:**
+- After creating many new memories
+- When search results seem outdated
+- After migrating or importing memories
+- Automatically handled by the system in most cases
+
+The manifest is stored in `.claude/memory/manifest.json` and loaded on-demand only when needed for search or browsing.
+
 ### Cleanup Stale Sessions
 
 Remove sessions with no activity for 24+ hours:
@@ -479,6 +579,7 @@ You can customize:
 ├── config.json            # Configuration
 ├── memory/
 │   ├── index.json         # Memory index
+│   ├── manifest.json      # Lightweight memory catalog (on-demand)
 │   ├── index-log/         # Pending updates
 │   ├── sessions/
 │   │   ├── active/        # Active sessions
@@ -487,6 +588,7 @@ You can customize:
 │   └── implementations/
 ├── sessions/
 │   ├── active/            # Session tracking files
+│   │   └── debug.flag     # Debug mode persistence (if enabled)
 │   └── archived/
 └── skills/
     └── skill-candidates.md

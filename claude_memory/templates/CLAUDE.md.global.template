@@ -55,10 +55,43 @@ When the user asks about "tasks", "what to work on", or similar:
    - Future work items (from FUTURE_WORK.md)
 4. Ask which they'd like to work on
 
+### Debug Mode
+When the user says "turn on debug mode" or "enable debug":
+1. Enable context tracking
+2. Log memory loads and token usage
+3. Report: "✅ Debug mode enabled. Tracking context usage..."
+4. Show current context breakdown
+
+When the user says "turn off debug mode" or "disable debug":
+1. Disable context tracking
+2. Report: "✅ Debug mode disabled."
+
+When the user says "show context usage" or "context status":
+1. Display current context breakdown
+2. Show memory budget usage
+3. List loaded memories this session
+
 ---
 
 ## Coding Style
 (Add your global coding preferences here)
 
-## Memory Pointers
-(Memory pointers will be added here as you work)
+## User Preferences
+(Add personal preferences here - name, coding style, etc.)
+
+---
+
+## Memory System
+
+**Memory Catalog:** `.claude/memory/manifest.json`
+
+Memories are stored in indexed files and loaded on-demand to minimize context usage.
+
+**To find memories:**
+- Use `claude-memory search <query>` to search
+- Check manifest.json when browsing
+- Load full content only when needed
+
+**Context Budget:** Target ≤ 5,000 tokens for memory system (2.5% of total)
+
+**Note:** Memory pointers are no longer embedded in this file to keep context lightweight. Use the manifest system instead.

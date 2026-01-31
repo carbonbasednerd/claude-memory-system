@@ -20,6 +20,12 @@ This project may have a FUTURE_WORK.md file in the root directory. If present, c
 
 (Project-specific context will be added here)
 
-## Memory Pointers
+---
 
-(Project memory pointers will be added here)
+## Memory System
+
+**Memory Catalog:** `.claude/memory/manifest.json`
+
+Project memories are indexed in the manifest file and loaded on-demand.
+
+Use `claude-memory search` to find relevant memories for this project.

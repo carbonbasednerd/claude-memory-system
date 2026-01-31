@@ -289,6 +289,38 @@ def rebuild_index(scope):
 
 
 @main.command()
+@click.option(
+    "--scope",
+    type=click.Choice(["global", "project", "both"]),
+    default="both",
+    help="Which manifest to rebuild",
+)
+def rebuild_manifest(scope):
+    """Rebuild memory manifest for lightweight loading."""
+    from claude_memory.manifest import MemoryManifest
+    from claude_memory.models import MemoryScope
+
+    manager = MemoryManager()
+
+    if scope in ["global", "both"]:
+        # Rebuild global manifest
+        global_index = manager.global_index.read_index(include_logs=True)
+        manifest = MemoryManifest(manager.global_dir, MemoryScope.GLOBAL)
+        manifest.rebuild(global_index)
+        click.echo(f"✓ Rebuilt global manifest ({len(global_index.memories)} memories)")
+
+    if scope in ["project", "both"]:
+        if not manager.project_dir:
+            click.echo("✗ Not in a project")
+            return
+        # Rebuild project manifest
+        project_index = manager.project_index.read_index(include_logs=True)
+        manifest = MemoryManifest(manager.project_dir, MemoryScope.PROJECT)
+        manifest.rebuild(project_index)
+        click.echo(f"✓ Rebuilt project manifest ({len(project_index.memories)} memories)")
+
+
+@main.command()
 @click.option("--hours", type=int, default=24, help="Hours of inactivity threshold")
 @click.option("--auto-archive", is_flag=True, help="Automatically archive stale sessions")
 def cleanup_sessions(hours, auto_archive):
@@ -372,6 +404,38 @@ def stats():
             click.echo(f"  By type:")
             for type_name, count in project_index.stats.get("by_type", {}).items():
                 click.echo(f"    {type_name}: {count}")
+
+
+@main.command()
+@click.argument("action", type=click.Choice(["on", "off", "status"]))
+def debug(action):
+    """Toggle debug mode for context tracking.
+
+    Actions:
+      on      - Enable debug mode
+      off     - Disable debug mode
+      status  - Show current debug status
+    """
+    manager = MemoryManager()
+    debug_flag = manager.global_dir / "sessions" / "debug.flag"
+
+    if action == "on":
+        debug_flag.parent.mkdir(parents=True, exist_ok=True)
+        debug_flag.write_text(f"enabled at {datetime.now().isoformat()}")
+        click.echo("✓ Debug mode enabled")
+        click.echo("  Context tracking will be active in your next session")
+        click.echo("  Say 'show context usage' to see breakdown")
+    elif action == "off":
+        if debug_flag.exists():
+            debug_flag.unlink()
+        click.echo("✓ Debug mode disabled")
+    else:  # status
+        if debug_flag.exists():
+            click.echo("Debug mode: ON")
+            content = debug_flag.read_text()
+            click.echo(f"  {content}")
+        else:
+            click.echo("Debug mode: OFF")
 
 
 @main.command()

@@ -1,5 +1,6 @@
 """Index management with append-log for concurrent writes."""
 
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -47,16 +48,26 @@ class IndexManager:
             include_logs: If True, merge log entries into the index
         """
         # Read base index
-        data = read_json_file(self.index_path)
+        try:
+            data = read_json_file(self.index_path)
+        except json.JSONDecodeError:
+            # Index is corrupted, rebuild from logs
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Index corrupted at {self.index_path}, rebuilding from logs...")
+
+            # Return empty index and let log merging rebuild it
+            data = None
+
         if not data:
-            # Return empty index
-            return MemoryIndex(
+            # Return empty index (will be populated from logs if include_logs=True)
+            index = MemoryIndex(
                 scope=self.scope,
                 last_updated=datetime.now(),
                 memories=[],
             )
-
-        index = MemoryIndex(**data)
+        else:
+            index = MemoryIndex(**data)
 
         # Merge log entries if requested
         if include_logs:

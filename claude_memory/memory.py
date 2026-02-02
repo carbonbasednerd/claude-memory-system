@@ -297,20 +297,27 @@ class MemoryManager:
 
     def get_memory(self, memory_id: str) -> MemoryEntry | None:
         """Get a specific memory entry by ID."""
-        # Try global first
-        global_index = self.global_index.read_index(include_logs=True)
-        memory = global_index.find_by_id(memory_id)
-        if memory:
-            return memory
-
-        # Try project
-        if self.project_index:
-            project_index = self.project_index.read_index(include_logs=True)
-            memory = project_index.find_by_id(memory_id)
+        try:
+            # Try global first
+            global_index = self.global_index.read_index(include_logs=True)
+            memory = global_index.find_by_id(memory_id)
             if memory:
                 return memory
 
-        return None
+            # Try project
+            if self.project_index:
+                project_index = self.project_index.read_index(include_logs=True)
+                memory = project_index.find_by_id(memory_id)
+                if memory:
+                    return memory
+
+            return None
+        except Exception as e:
+            # Handle any unexpected errors gracefully
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error reading memory {memory_id}: {e}")
+            return None
 
     def record_memory_access(
         self, memory_id: str, query: str = ""

@@ -1,43 +1,63 @@
 # Claude Memory System
 
-A two-tier memory system for Claude Code that provides:
+A comprehensive two-tier memory system for Claude Code that provides intelligent context management, visualization, and analytics:
 - **Short-term memory**: Active session tracking with auto-updates
 - **Long-term memory**: Persistent project history and decisions
+- **Memory visualization**: Rich terminal UI and interactive web dashboard
+- **Context optimization**: Lightweight manifest system with 30% token reduction
 - **Skills evolution**: Automatic pattern detection and skill candidate extraction
 - **Concurrent sessions**: Safe multi-session memory access
 - **Global + Project scope**: User-wide and project-specific memories
 
 ## Features
 
+### Core Memory System
 - 🧠 **Automatic session tracking** - Claude tracks work as you go
 - 📚 **Long-term memory** - Save sessions, decisions, and implementations
-- 🎯 **Lazy-loading pointers** - Only load detailed memory when contextually relevant
+- 🎯 **Lightweight manifest** - 30% context reduction with lazy-loading metadata
 - 🔄 **Concurrent-safe** - Multiple Claude sessions can work simultaneously
 - 🌍 **Global + Project** - Memories shared across projects or kept project-specific
 - ⚡ **Skill extraction** - Patterns evolve into reusable skills
 - 🔍 **Smart search** - Find memories by keywords, tags, and triggers
 
+### Visualization & Analytics
+- 📊 **Web Dashboard** - Interactive Streamlit app with charts and graphs
+- 🎨 **Rich Terminal UI** - Beautiful CLI visualization powered by Rich library
+- 📈 **Timeline views** - Chronological memory exploration with access tracking
+- 🏷️ **Tag analysis** - Tag clouds, co-occurrence networks, and frequency stats
+- 🔎 **Advanced search** - Full-text search with filters and export (JSON/Markdown/CSV)
+- 📉 **Statistics dashboard** - Usage patterns, activity trends, and health checks
+- 🗺️ **Project mapping** - Scan and visualize all projects with memory
+
+### Optimization & Debugging
+- 🐛 **Debug mode** - Track context usage and optimize token consumption
+- 🔧 **Health checks** - Identify untagged, unused, or duplicate memories
+- 📦 **Export capabilities** - JSON, Markdown, CSV exports for reporting
+- ⚡ **Access tracking** - Monitor which memories are used most frequently
+
 ## Architecture
 
 ```
 Global Memory (~/.claude/)
-├── CLAUDE.md                 # Static memory pointers (read by all sessions)
+├── CLAUDE.md                 # Instructions for Claude (auto-generated)
 ├── config.json               # Configuration
 ├── memory/
-│   ├── index.json            # Base memory index
+│   ├── manifest.json         # Lightweight metadata index (30% token savings)
+│   ├── index.json            # Full memory index
 │   ├── index-log/            # Append-only updates (concurrent-safe)
 │   ├── sessions/
 │   │   ├── active/           # Currently running sessions
-│   │   └── archived/         # Completed sessions
+│   │   └── archived/         # Completed sessions (markdown files)
 │   ├── decisions/            # Decision records
 │   └── implementations/      # Implementation details
-└── skills/
-    ├── index.json
-    └── skill-candidates.md
+├── skills/
+│   ├── index.json
+│   └── skill-candidates.md
+└── debug.flag                # Debug mode persistence flag
 
 Project Memory (/project/.claude/)
-├── CLAUDE.md                 # Project-specific pointers
-├── memory/                   # Same structure as global
+├── CLAUDE.md                 # Project-specific instructions
+├── memory/                   # Same structure as global (manifest, index, sessions)
 └── skills/                   # Project-specific skills
 ```
 
@@ -48,8 +68,11 @@ Project Memory (/project/.claude/)
 git clone https://github.com/carbonbasednerd/claude-memory-system.git
 cd claude-memory-system
 
-# Install with pip
+# Install core system
 pip install .
+
+# Or install with web dashboard support (includes Streamlit, Plotly, etc.)
+pip install -e ".[web]"
 
 # Or install in editable mode for development
 pip install -e .
@@ -99,6 +122,61 @@ claude-memory list-sessions
 claude-memory save-session --tags "feature,auth" --summary "Added OAuth support"
 ```
 
+### Memory Visualization (Terminal UI)
+```bash
+# Timeline view (chronological with access tracking)
+claude-memory viz timeline
+claude-memory viz timeline --days 30 --min-accesses 5
+
+# Session details
+claude-memory viz session <session-id>
+
+# Advanced search with filters
+claude-memory viz search "authentication" --scope project --tags "security"
+claude-memory viz search "docs" --never-accessed --export markdown
+
+# Statistics dashboard
+claude-memory viz stats
+claude-memory viz stats --export json
+
+# Tag analysis (cloud, co-occurrence, frequency)
+claude-memory viz tags --min-count 3
+
+# Project map (scan all .claude directories)
+claude-memory viz projects
+
+# Health check (integrity, warnings, recommendations)
+claude-memory viz health
+```
+
+### Web Dashboard (Interactive UI)
+```bash
+# Launch web dashboard (Streamlit + Plotly)
+claude-memory web
+
+# Custom port
+claude-memory web --port 8080
+
+# Installation (requires extra dependencies)
+pip install -e ".[web]"
+```
+
+**Features:** Interactive timeline, tag network graphs, activity heatmaps, advanced search, export to JSON/Markdown/CSV.
+
+### Debug Mode & Context Tracking
+```bash
+# Enable debug mode (track context usage)
+claude-memory debug on
+
+# Check status
+claude-memory debug status
+
+# Disable
+claude-memory debug off
+```
+
+When enabled, Claude provides detailed context usage reports showing token consumption by component.
+
 ### Search Memory
 ```bash
 claude-memory search "authentication"
@@ -117,6 +195,10 @@ claude-memory extract-skill <session-id>
 
 ### Maintenance
 ```bash
+# Rebuild manifest (lightweight metadata index)
+claude-memory rebuild-manifest
+claude-memory rebuild-manifest --scope global
+
 # Rebuild index from logs
 claude-memory rebuild-index
 
@@ -139,11 +221,15 @@ claude-memory export --output backup.tar.gz
 
 ## Design Decisions
 
+- **Manifest-based optimization**: Lightweight metadata index reduces context usage by 30% (1,390 → 968 tokens always-loaded)
 - **Append-log for concurrency**: Index updates use append-only logs, preventing write conflicts
 - **Lazy loading**: Only load detailed memories when contextually triggered
 - **Auto-tracking**: Sessions automatically track work, evaluated on completion
 - **Hierarchical scope**: Global memories available everywhere, project memories isolated
 - **Pattern detection**: Automatic flagging of skill candidates from repeated patterns
+- **Access tracking**: Monitor which memories are used to optimize relevance
+- **Multi-modal visualization**: Both terminal UI (Rich) and web UI (Streamlit) for different workflows
+- **Debug mode**: Optional context tracking for optimization and transparency
 
 ## Development
 
